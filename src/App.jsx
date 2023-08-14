@@ -25,18 +25,24 @@ export default function App() {
       */}
       <Routes>
         {/* <Route index element={<h1>Hello World</h1>} /> */}
-        <Route path='/' element={<Home user={user} />}>
-          {/* This is nesting of routes, here components of nested routes will be rendered on
+        {/* This is nesting of routes, here components of nested routes will be rendered on
           component of parent route only (here parent route is '/' and component of parent route is 'Home')
           This will be done by 'Outlet' component, this is required in parent component.
           Position of 'Outlet' component in parent component decides where this nested components will be renderd */}
+        <Route path='/home' element={<Home user={user} />}>
+          {/* If we remove `element={<Home user={user} />}` from here
+          then routes will not be rendered on 'Home' component at 'Outlet'
+          and '<Default />' will be rendered at '/home' route bcoz it has 'index' property */}
           <Route index element={<Default />} />
-          {/* If you use 'index' route in nested routes, then component mentioned with index route will be renderd by default */}
+          {/* And if we don't remove `element={<Home user={user} />}`
+          then '<Default />' will be rendered at 'Outlet' in 'Home' component, bcoz it has 'index' property */}
 
+          {/* When we use nesting their is no need of using '/' in front of route path
+          e.g., use path='products' not path='/products' */}
           <Route path='products' element={<Products />} />
           <Route path='products/:productId' element={<SingleProduct />} />
           {/* Here productId is parameter, try to console log productId in 'SingleProduct' component.
-          This is accessed by 'useParams' hook of 'react-router-dom' */}
+          This is done by 'useParams' hook of 'react-router-dom' */}
 
           <Route path='about' element={<About />} />
         </Route>
@@ -67,8 +73,6 @@ export default function App() {
 /*
 *****
 
-* Also learn about 'NavLink' Components in react-router-dom
-
 Routes and Route are two different components.
 - Routes is a parent component.
 - Route is a child component.
@@ -76,10 +80,9 @@ Routes and Route are two different components.
 1. <Route index element={<Home />} /> // (this is defalut route)(Works good for nested routes)
 2. <Route path="/" element={<Home />} />
 - Both them are almost same.
-- When both 1st and 2nd are present, then 1st will be rendered.
-- 'index' prop has higher priority than 'path' prop.
+- But when both of them are used then the Route having 'index' property will be rendered as home route.
+- 'index' property has higher priority than 'path' prop.
 - You can use any of them.
-- But when both of them are used then the Route having 'index' prop will be rendered as home route.
 
 <Route path="*" element={<Errors />} />
 - It will be rendered when no route is matched.
