@@ -16,7 +16,7 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename='/'>
       <Nav user={user} />
       {/*
       Note the position where 'Nav' is placed, outside the 'Routes' component.
@@ -39,8 +39,11 @@ export default function App() {
 
           {/* When we use nesting their is no need of using '/' in front of route path
           e.g., use path='products' not path='/products' */}
-          <Route path='products' element={<Products />} />
-          <Route path='products/:productId' element={<SingleProduct />} />
+          <Route element={<ProtectedRoute user={user} />}>
+            {/* Here in `ProtectedRoute` first user is present or not is checked */}
+            <Route path='products' element={<Products />} />
+            <Route path='products/:productId' element={<SingleProduct />} />
+          </Route>
           {/* Here productId is parameter, try to console log productId in 'SingleProduct' component.
           This is done by 'useParams' hook of 'react-router-dom' */}
 
@@ -50,15 +53,9 @@ export default function App() {
         <Route path='/login' element={<Login setUser={setUser} />} />
         {/* <Route path="/user" element={<User user={user} />} /> */}
 
-        <Route /* this will be rendered if user is logined (it will be checked in 'ProtectedRoute') */
-          path='/user'
-          element={
-            <ProtectedRoute user={user}>
-              <User user={user} />
-            </ProtectedRoute>
-            /* Take a look at 'ProtectedRoute' component and it's props */
-          }
-        />
+        <Route element={<ProtectedRoute user={user} />}>
+          <Route path='/user' element={<User user={user} />} />
+        </Route>
 
         <Route path='/document' element={<Document />} />
 

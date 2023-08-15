@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function Login({ setUser }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // here 'state.from' comes from `<Navigate />` component in `ProtectedRoute.js`
+  const prevPath = location.state?.from?.pathname || '/home'; // when you use `useLocation()` hook in `ProtectedRoute.js`
+  // const prevPath = location.state?.from || '/home'; // when you use 'window.location.pathname' in `ProtectedRoute.js`
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // console.log(name, email);
 
     if (!name || !email) return;
     setUser({ name: name, email: email });
-    navigate('/home');
+    navigate(prevPath, { replace: true }); // this will help you to back to the page you were before login
   };
 
   return (
